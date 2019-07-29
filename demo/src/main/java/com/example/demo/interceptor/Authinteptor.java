@@ -10,6 +10,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -73,32 +74,23 @@ public class Authinteptor extends HandlerInterceptorAdapter  {
 
     private void returnErrorContent(int code, HttpServletResponse response, String msg) {
 
-        response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
         response.setStatus(code);
-        PrintWriter out = null;
+
+        ServletOutputStream out=null;
         try {
             JSONObject res = new JSONObject();
             res.put("status", code);
             res.put("msg", msg);
-            out = response.getWriter();
-            out.append(res.toString());
-
-
+            out = response.getOutputStream();
+            out.write(res.toString().getBytes("utf-8"));
+            out.flush();
+            out.close();
         } catch (IOException e) {
 
-            e.printStackTrace();
-        }finally {
-            try {
-                if(out != null){
-                    out.flush();
-                    out.close();
-                }
-            }catch (Exception e){
-
-            }
         }
+
     }
 
 
