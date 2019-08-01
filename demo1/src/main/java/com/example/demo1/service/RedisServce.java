@@ -16,6 +16,8 @@ public class RedisServce {
         onlieMap.put(username,token);
     }
 
+    
+
     public String getUsername(String token) {
         for(Map.Entry<String, String> entry : onlieMap.entrySet()){
 
